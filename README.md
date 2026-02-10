@@ -13,8 +13,8 @@ The notebook demonstrates how raw, noisy web data can be inspected, cleaned, and
 	•	🧮 Total features: 16
 	•	🔢 Feature types: Numeric + Categorical
 	•	🎯 Target variable: label
-	•	1 -> Phishing
-	•	0 -> Legitimate
+	•	0 -> Phishing
+	•	1 -> Legitimate
 
 🔍 Key Observations from EDA
 
