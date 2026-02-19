@@ -1,6 +1,5 @@
 🎣 Phishing Website Detection
 
-
 📌 Project Overview
 
 This project focuses on exploratory data analysis (EDA) and data preprocessing for a phishing website detection task. The dataset consists of engineered website-level features extracted from HTML structure, metadata, and hosting information.
