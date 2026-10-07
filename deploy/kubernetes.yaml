@@ -1,0 +1,140 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: phishing-detection-api-config
+data:
+  SERVICE_ENV: production
+  LOG_LEVEL: INFO
+  MODEL_PATH: /app/artifacts/best_model.joblib
+  MAX_BATCH_SIZE: "100"
+  ENABLE_DOCS: "false"
+  REQUIRE_API_KEY: "true"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: phishing-detection-model
+spec:
+  accessModes: ["ReadOnlyMany"]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phishing-detection-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: phishing-detection-api
+  template:
+    metadata:
+      labels:
+        app: phishing-detection-api
+    spec:
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          image: ghcr.io/fchityan/phishing-website-detection-analysis:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: phishing-detection-api-config
+          env:
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: phishing-detection-api-secrets
+                  key: api-key
+            - name: MODEL_SHA256
+              valueFrom:
+                secretKeyRef:
+                  name: phishing-detection-api-secrets
+                  key: model-sha256
+                  optional: true
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: model
+              mountPath: /app/artifacts
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: model
+          persistentVolumeClaim:
+            claimName: phishing-detection-model
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: phishing-detection-api
+spec:
+  type: ClusterIP
+  selector:
+    app: phishing-detection-api
+  ports:
+    - port: 80
+      targetPort: 8000
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: phishing-detection-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: phishing-detection-api
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: phishing-detection-api
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: phishing-detection-api
