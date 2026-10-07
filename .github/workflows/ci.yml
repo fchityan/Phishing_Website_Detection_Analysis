@@ -23,8 +23,10 @@ jobs:
           pip install -r requirements.txt
           pip check
       - name: Compile
-        run: python -m compileall -q app.py src tests
+        run: python -m compileall -q app.py src tests scripts
       - name: Run tests
         run: pytest -q
       - name: Build production container
         run: docker build --tag phishing-detection-api:ci .
+      - name: Run container smoke test
+        run: bash scripts/ci_smoke_test.sh phishing-detection-api:ci
