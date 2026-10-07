@@ -23,7 +23,7 @@ jobs:
           pip install -r requirements.txt
           pip check
       - name: Compile
-        run: python -m compileall -q app.py src tests scripts
+        run: python -m compileall -q app.py src tests scripts load
       - name: Run tests
         run: pytest -q
       - name: Build production container
