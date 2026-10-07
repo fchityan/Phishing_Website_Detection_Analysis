@@ -9,3 +9,5 @@ outputs/
 .env
 *.pem
 *.key
+registry/
+sbom.cdx.json
