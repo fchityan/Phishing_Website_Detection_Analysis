@@ -34,6 +34,7 @@ spec:
       labels:
         app: phishing-detection-api
     spec:
+      automountServiceAccountToken: false
       terminationGracePeriodSeconds: 30
       securityContext:
         runAsNonRoot: true
@@ -41,7 +42,8 @@ spec:
           type: RuntimeDefault
       containers:
         - name: api
-          image: ghcr.io/fchityan/phishing-website-detection-analysis:latest
+          # Replace the zero digest with the signed release digest emitted by release.yml.
+          image: ghcr.io/fchityan/phishing-website-detection-analysis@sha256:0000000000000000000000000000000000000000000000000000000000000000
           ports:
             - containerPort: 8000
           envFrom:

@@ -10,6 +10,11 @@ from pathlib import Path
 from uuid import uuid4
 
 from fastapi import HTTPException, Request
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Gauge, Histogram, generate_latest
 from starlette.responses import Response
 
@@ -39,6 +44,52 @@ def _truthy(value: str | None) -> bool:
 def configure_logging() -> None:
     level = os.getenv("LOG_LEVEL", "INFO").upper()
     logging.basicConfig(level=getattr(logging, level, logging.INFO), format="%(message)s")
+
+
+def configure_tracing(app) -> bool:
+    """Enable OpenTelemetry tracing without recording request feature payloads."""
+    endpoint = os.getenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT", "").strip()
+    enabled = _truthy(os.getenv("ENABLE_TRACING", "false")) or bool(endpoint)
+    if not enabled:
+        return False
+
+    resource = Resource.create(
+        {
+            "service.name": os.getenv(
+                "OTEL_SERVICE_NAME",
+                "phishing-website-detection-api",
+            ),
+            "service.version": str(getattr(app, "version", "unknown")),
+            "deployment.environment": os.getenv("SERVICE_ENV", "development"),
+        }
+    )
+    provider = TracerProvider(resource=resource)
+    if endpoint:
+        provider.add_span_processor(
+            BatchSpanProcessor(
+                OTLPSpanExporter(
+                    endpoint=endpoint,
+                    timeout=float(os.getenv("OTEL_EXPORTER_OTLP_TIMEOUT", "10")),
+                )
+            )
+        )
+
+    FastAPIInstrumentor.instrument_app(
+        app,
+        tracer_provider=provider,
+        excluded_urls="live,ready,metrics",
+    )
+    LOGGER.info(
+        json.dumps(
+            {
+                "event": "tracing_configured",
+                "exporter": "otlp_http" if endpoint else "none",
+                "service_env": os.getenv("SERVICE_ENV", "development"),
+            },
+            separators=(",", ":"),
+        )
+    )
+    return True
 
 
 def artifact_sha256(path: str | Path) -> str:

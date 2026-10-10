@@ -8,7 +8,7 @@ This project models the application and MLOps controls of a production phishing-
 2. Review validation comparison and the phishing-class F2 operating threshold.
 3. Evaluate the selected model and threshold on the locked test split.
 4. Review `outputs/deployment_manifest.json`.
-5. Promote an immutable `artifacts/best_model.joblib` and record its SHA-256.
+5. Promote the verified artifact with `python -m src.promote` so the SHA-256, locked-test evidence, reviewer, and promotion stage are recorded immutably.
 6. Store the API key and promoted model fingerprint in the platform secret manager.
 7. Deploy the immutable container image and model artifact behind TLS ingress/API gateway.
 8. Verify `/live`, `/ready`, `/metrics`, authenticated metadata, and a known-good scoring request before routing traffic.
@@ -27,6 +27,7 @@ Never overwrite a promoted model artifact in place.
 - Logs are structured JSON and intentionally omit raw features and predictions.
 - `MODEL_SHA256` can enforce exact artifact integrity.
 - `ENABLE_DOCS=false` removes Swagger/OpenAPI endpoints in production.
+- `ENABLE_TRACING=true` plus `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` enables OTLP trace export without adding feature payloads to spans.
 
 ## Suggested SLO targets
 
@@ -57,8 +58,11 @@ Create an incident when:
 
 ## Rollback
 
-Keep immutable image digests and immutable model versions. Roll back both image and model to the previously verified release. Retain the prior deployment manifest and fingerprint for audit.
+Keep immutable signed image digests and immutable model versions. Roll back both image and model to the previously verified release. Retain the prior deployment manifest, promotion record, fingerprint, and image digest for audit.
 
 ## Security boundary
 
 The reference architecture assumes TLS termination and gateway controls outside the repository. A real deployment should add cloud IAM, managed secrets, private networking as appropriate, WAF/rate limiting, centralized logs/traces, dependency and image scanning, image signing, model-registry access control, and on-call escalation.
+
+
+See `docs/production_readiness.md` for the implemented supply-chain, tracing, load-test, and model-promotion controls plus the remaining production boundary.

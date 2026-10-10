@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 from src.inference import load_model_bundle, predict_records
 from src.production import (
     configure_logging,
+    configure_tracing,
     install_observability,
     metrics_response,
     register_model_metrics,
@@ -57,13 +58,14 @@ async def lifespan(application: FastAPI):
 
 app = FastAPI(
     title="Phishing Website Detection API",
-    version="2.0.0",
+    version="2.1.0",
     lifespan=lifespan,
     docs_url="/docs" if DOCS_ENABLED else None,
     redoc_url="/redoc" if DOCS_ENABLED else None,
     openapi_url="/openapi.json" if DOCS_ENABLED else None,
 )
 install_observability(app)
+app.state.tracing_enabled = configure_tracing(app)
 
 
 def _require_bundle(request: Request) -> dict[str, Any]:
@@ -110,6 +112,7 @@ def metadata(request: Request) -> dict[str, Any]:
         "created_at_utc": bundle.get("created_at_utc"),
         "model_sha256": request.app.state.model_sha256,
         "service_env": os.getenv("SERVICE_ENV", "development"),
+        "tracing_enabled": bool(getattr(request.app.state, "tracing_enabled", False)),
     }
 
 

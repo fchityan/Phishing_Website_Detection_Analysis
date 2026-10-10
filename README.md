@@ -54,10 +54,13 @@ Rollback to previous immutable image + model artifact
 - Optional API-key authentication
 - Liveness, readiness, metadata, and Prometheus metrics endpoints
 - Structured request logging and request IDs without logging feature payloads
+- Optional OpenTelemetry tracing through OTLP
 - Numeric PSI and categorical total-variation drift checks
 - Non-root Docker serving
 - Kubernetes probes, resource limits, HPA, and PodDisruptionBudget template
-- Automated tests and CI container builds
+- Automated tests, CI container builds, and container-level smoke testing
+- Immutable model promotion with locked-test gates
+- Dependency auditing, Trivy scanning, CycloneDX SBOM generation, and signed GHCR release workflow
 - Production runbook and security guidance
 
 ## Repository structure
@@ -153,7 +156,7 @@ docker build -t phishing-detection-api .
 
 The container runs as a non-root user and expects the model artifact to be mounted read-only. The Kubernetes reference adds multiple replicas, readiness/liveness probes, CPU and memory controls, autoscaling, a PodDisruptionBudget, dropped Linux capabilities, and a read-only root filesystem.
 
-See `deploy/kubernetes.yaml`, `docs/production_runbook.md`, `.env.example`, and `SECURITY.md`.
+See `deploy/kubernetes.yaml`, `docs/production_runbook.md`, `docs/production_readiness.md`, `.env.example`, and `SECURITY.md`.
 
 ## Tests
 
@@ -161,7 +164,7 @@ See `deploy/kubernetes.yaml`, `docs/production_runbook.md`, `.env.example`, and 
 pytest -q
 ```
 
-GitHub Actions compiles the service, runs the tests, checks installed dependencies, and builds the production container.
+GitHub Actions compiles the service, runs the tests, builds the production container, exercises it through a container smoke test, audits dependencies, generates an SBOM, and supports signed immutable container releases from version tags.
 
 ## Production boundary
 
