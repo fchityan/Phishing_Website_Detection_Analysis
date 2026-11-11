@@ -42,6 +42,7 @@ See the [requirements and solution-design assessment](docs/business-analysis/bus
 | Existing folder/file | Business or delivery role |
 |---|---|
 | `app.py` | Prediction API and solution integration |
+| `data-discovery-and-insights/` | Feature profiling and cybersecurity risk indicator analysis |
 | `src/` | Data preparation, risk classification and ML pipeline |
 | `tests/` | Automated model and interface verification |
 | `deployment-architecture/` | Deployment architecture and operational readiness |
