@@ -59,7 +59,7 @@ See the [requirements and solution-design assessment](docs/business-analysis/bus
 
 - [Business analysis, solution design and AI-governance documentation](docs/README.md)
 
-- [Original exploratory notebook](phishing_website_detection.ipynb)
+- [Original exploratory notebook](data-discovery-and-insights/phishing-risk-feature-profiling.ipynb)
 - [Technical guide — methods, commands, and architecture](docs/solution-design/solution-design-and-implementation-guide.md)
 - [Deployment and operations notes](docs/operational-readiness/service-transition-and-operations-runbook.md)
 - [Security guidance](SECURITY.md)

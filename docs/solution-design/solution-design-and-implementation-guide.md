@@ -6,7 +6,7 @@ This guide preserves the detailed implementation, model workflow, evaluation, de
 
 A production-grade reference implementation for classifying phishing websites versus legitimate websites from engineered website, HTML, metadata, and hosting features.
 
-The original exploratory notebook, `phishing_website_detection.ipynb`, is preserved. The repository now separates experimentation, training, locked evaluation, monitoring, inference, and deployment concerns so the project can be reviewed as an end-to-end ML service architecture rather than a notebook-only exercise.
+The original exploratory notebook, `data-discovery-and-insights/phishing-risk-feature-profiling.ipynb`, is preserved. The repository now separates experimentation, training, locked evaluation, monitoring, inference, and deployment concerns so the project can be reviewed as an end-to-end ML service architecture rather than a notebook-only exercise.
 
 ## Problem framing
 
@@ -69,7 +69,7 @@ Rollback to previous immutable image + model artifact
 ```text
 .
 ├── app.py
-├── phishing_website_detection.ipynb
+├── data-discovery-and-insights/phishing-risk-feature-profiling.ipynb
 ├── Dockerfile
 ├── requirements.txt
 ├── src/
