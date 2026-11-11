@@ -86,7 +86,14 @@ Rollback to previous immutable image + model artifact
 ├── deployment-architecture/
 │   └── kubernetes.yaml
 └── docs/
-    └── service-transition-and-operations-runbook.md
+    ├── business-analysis/
+    │   └── business-requirements-and-solution-design.md
+    ├── ai-enablement/
+    │   └── ai-readiness-and-model-governance-assessment.md
+    ├── solution-design/
+    │   └── solution-design-and-implementation-guide.md
+    └── operational-readiness/
+        └── service-transition-and-operations-runbook.md
 ```
 
 ## Input data
