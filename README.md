@@ -31,7 +31,11 @@ The repository includes a framework for comparing models and evaluating a held-o
 
 ## Technology Stack
 
-**Python · pandas · scikit-learn · FastAPI · Docker · Kubernetes · pytest**
+- **Language, data and exploration:** Python, NumPy, pandas, Jupyter Notebook, Matplotlib, Seaborn, SQLite (exploratory notebook)
+- **Machine learning:** scikit-learn (Logistic Regression, Random Forest, Extra Trees), joblib for model serialization
+- **API and validation:** FastAPI, Uvicorn, Pydantic, HTTPX
+- **Monitoring and operations:** Prometheus Python client, feature-drift checks, Docker, Kubernetes
+- **Testing and automation:** pytest, GitHub Actions CI
 
 ## Explore the Project
 
