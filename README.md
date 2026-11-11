@@ -162,11 +162,3 @@ pytest -q
 ```
 
 GitHub Actions compiles the service, runs the tests, checks installed dependencies, and builds the production container.
-
-## Production boundary
-
-This repository is intentionally designed as a **production-grade reference implementation**, not a claim that it is currently operating as a live enterprise phishing-detection system.
-
-A real production deployment would still need live threat-intelligence or browser/URL feature ingestion, cloud IAM and managed secrets, centralized logs/traces, a managed artifact/model registry, ingress/WAF and rate limiting, security scanning and image signing, alert routing, adversarial evaluation, analyst false-positive review, delayed confirmed labels/outcome feedback, canary rollout, and on-call ownership.
-
-Exact model-performance metrics are intentionally not published until the intended source dataset is rerun through the upgraded pipeline.
