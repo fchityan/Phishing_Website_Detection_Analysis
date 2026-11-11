@@ -29,6 +29,24 @@ The dataset uses **0 = phishing** and **1 = legitimate**.
 
 The repository includes a framework for comparing models and evaluating a held-out test set. **No numerical detection-performance claim is published**, because the source dataset is not included and the updated pipeline has not been rerun against it here. This is a feature-based ML reference, not a verified live phishing-blocking service.
 
+## Business Analysis, Digital Transformation & AI Enablement
+
+- **Business analysis:** Define the phishing-versus-legitimate decision, missed-threat risk, false-positive tolerance and requirements traceability.
+- **Digital transformation:** Map website-feature validation → classifier scoring → security-review workflow and monitoring.
+- **AI enablement:** Document label quality, validation-only F2 threshold selection and model-readiness gaps.
+
+See the [requirements and solution-design assessment](docs/business-analysis/requirements-and-solution-design.md) and [AI readiness / governance assessment](docs/ai-enablement/readiness-and-governance.md). They are project analysis documents, not claims of signed-off UAT.
+
+### Folder guide
+
+| Existing folder/file | Business or delivery role |
+|---|---|
+| `app.py` | Prediction API and solution integration |
+| `src/` | Data preparation, risk classification and ML pipeline |
+| `tests/` | Automated model and interface verification |
+| `deploy/` | Deployment architecture and operational readiness |
+| `docs/` | Requirements, technical design and AI governance |
+
 ## Technology Stack
 
 - **Language, data and exploration:** Python, NumPy, pandas, Jupyter Notebook, Matplotlib, Seaborn, SQLite (exploratory notebook)
