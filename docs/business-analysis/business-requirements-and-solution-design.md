@@ -1,4 +1,4 @@
-# Business Requirements & Solution Design — Phishing Website Detection ML
+# Business Requirements & Solution Design Specification — Phishing Website Detection ML
 
 This is a project-level **requirements traceability and solution-design artefact**, not a signed-off BRD or completed UAT.
 

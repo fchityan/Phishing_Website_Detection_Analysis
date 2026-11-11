@@ -35,7 +35,7 @@ The repository includes a framework for comparing models and evaluating a held-o
 - **Digital transformation:** Map website-feature validation → classifier scoring → security-review workflow and monitoring.
 - **AI enablement:** Document label quality, validation-only F2 threshold selection and model-readiness gaps.
 
-See the [requirements and solution-design assessment](docs/business-analysis/requirements-and-solution-design.md) and [AI readiness / governance assessment](docs/ai-enablement/readiness-and-governance.md). They are project analysis documents, not claims of signed-off UAT.
+See the [requirements and solution-design assessment](docs/business-analysis/business-requirements-and-solution-design.md) and [AI readiness / governance assessment](docs/ai-enablement/ai-readiness-and-model-governance-assessment.md). They are project analysis documents, not claims of signed-off UAT.
 
 ### Folder guide
 
@@ -44,7 +44,7 @@ See the [requirements and solution-design assessment](docs/business-analysis/req
 | `app.py` | Prediction API and solution integration |
 | `src/` | Data preparation, risk classification and ML pipeline |
 | `tests/` | Automated model and interface verification |
-| `deploy/` | Deployment architecture and operational readiness |
+| `deployment-architecture/` | Deployment architecture and operational readiness |
 | `docs/` | Requirements, technical design and AI governance |
 
 ## Technology Stack
@@ -57,9 +57,11 @@ See the [requirements and solution-design assessment](docs/business-analysis/req
 
 ## Explore the Project
 
+- [Business analysis, solution design and AI-governance documentation](docs/README.md)
+
 - [Original exploratory notebook](phishing_website_detection.ipynb)
-- [Technical guide — methods, commands, and architecture](docs/technical_guide.md)
-- [Deployment and operations notes](docs/production_runbook.md)
+- [Technical guide — methods, commands, and architecture](docs/solution-design/solution-design-and-implementation-guide.md)
+- [Deployment and operations notes](docs/operational-readiness/service-transition-and-operations-runbook.md)
 - [Security guidance](SECURITY.md)
 
 The training dataset must be supplied separately; see the technical guide for the expected schema and commands.

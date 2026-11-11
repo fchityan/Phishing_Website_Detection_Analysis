@@ -1,4 +1,4 @@
-# AI Enablement Readiness & Governance — Phishing Website Detection ML
+# AI Readiness & Model Governance Assessment — Phishing Website Detection ML
 
 ## Data and evaluation readiness
 

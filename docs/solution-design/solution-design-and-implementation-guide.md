@@ -1,6 +1,6 @@
-# Phishing Website Detection ML — Technical Guide
+# Solution Design & Implementation Guide — Phishing Website Detection
 
-This guide preserves the detailed implementation, model workflow, evaluation, deployment notes, and run commands previously included in the root README. Commands and file paths are relative to the repository root. For a concise summary, see the [project overview](../README.md).
+This guide preserves the detailed implementation, model workflow, evaluation, deployment notes, and run commands previously included in the root README. Commands and file paths are relative to the repository root. For a concise summary, see the [project overview](../../README.md).
 
 ---
 
@@ -83,10 +83,10 @@ Rollback to previous immutable image + model artifact
 │   ├── test_pipeline.py
 │   ├── test_inference.py
 │   └── test_monitor.py
-├── deploy/
+├── deployment-architecture/
 │   └── kubernetes.yaml
 └── docs/
-    └── production_runbook.md
+    └── service-transition-and-operations-runbook.md
 ```
 
 ## Input data
@@ -157,7 +157,7 @@ docker build -t phishing-detection-api .
 
 The container runs as a non-root user and expects the model artifact to be mounted read-only. The Kubernetes reference adds multiple replicas, readiness/liveness probes, CPU and memory controls, autoscaling, a PodDisruptionBudget, dropped Linux capabilities, and a read-only root filesystem.
 
-See `deploy/kubernetes.yaml`, `docs/production_runbook.md`, `.env.example`, and `SECURITY.md`.
+See `deployment-architecture/kubernetes.yaml`, `docs/operational-readiness/service-transition-and-operations-runbook.md`, `.env.example`, and `SECURITY.md`.
 
 ## Tests
 
