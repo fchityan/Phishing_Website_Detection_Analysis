@@ -1,164 +1,43 @@
 # Phishing Website Detection ML
 
-A production-grade reference implementation for classifying phishing websites versus legitimate websites from engineered website, HTML, metadata, and hosting features.
+## Project Overview
 
-The original exploratory notebook, `phishing_website_detection.ipynb`, is preserved. The repository now separates experimentation, training, locked evaluation, monitoring, inference, and deployment concerns so the project can be reviewed as an end-to-end ML service architecture rather than a notebook-only exercise.
+This machine learning project explores how website, HTML, metadata, and hosting features can distinguish phishing websites from legitimate ones. It extends an exploratory notebook into a reproducible classification workflow with model evaluation and an API for scoring structured website features.
 
-## Problem framing
+## Problem
 
-The project uses the original target convention:
+Phishing detection must balance two risks: missing malicious websites and incorrectly flagging legitimate ones. The project emphasizes detecting phishing cases while also measuring false positives.
 
-- `0` = phishing
-- `1` = legitimate
+## Approach
 
-Missed phishing sites are treated as the higher-cost error. Candidate models therefore use validation-only threshold tuning that maximizes phishing-class F2, weighting recall more heavily than precision while still penalizing false positives.
+- Clean and validate website feature data, including missing and invalid values.
+- Compare Logistic Regression, Random Forest, and Extra Trees classifiers.
+- Use stratified training, validation, and held-out test splits.
+- Select a decision threshold using phishing-class F2, which emphasizes recall.
+- Package the selected model for feature-based prediction and monitoring.
 
-## Production-style lifecycle
+The dataset uses **0 = phishing** and **1 = legitimate**.
 
-```text
-Source data
-    ↓
-Data-quality cleaning + schema checks
-    ↓
-Stratified train / validation / locked test
-    ↓
-Logistic Regression / Random Forest / Extra Trees
-    ↓
-Validation average precision + phishing F2 threshold tuning
-    ↓
-Immutable model bundle + SHA-256 fingerprint
-    ↓
-Locked test evaluation
-    ↓
-Authenticated FastAPI online / batch inference
-    ↓
-Prometheus service metrics + feature-drift checks
-    ↓
-Docker / Kubernetes deployment controls
-    ↓
-Rollback to previous immutable image + model artifact
-```
+## Key Features
 
-## What the project demonstrates
+- Reproducible training, model comparison, and evaluation
+- Single-record and batch predictions through a FastAPI service
+- Input validation and feature-drift reporting
+- Automated tests and a containerized application reference
 
-- Data-quality handling for unnamed index columns, missing values, invalid negative count-like values, and non-finite values
-- Numeric median imputation and standardization
-- Categorical most-frequent imputation and one-hot encoding
-- Reproducible 60/20/20 stratified train/validation/test splitting
-- Logistic Regression, Random Forest, and Extra Trees comparison
-- Validation-only phishing F2 threshold optimization
-- Locked holdout evaluation separated from model and threshold selection
-- Versioned model bundles containing feature schema and a training monitoring profile
-- SHA-256 artifact fingerprinting and deployment manifests
-- Strict online/batch inference schema validation
-- Optional API-key authentication
-- Liveness, readiness, metadata, and Prometheus metrics endpoints
-- Structured request logging and request IDs without logging feature payloads
-- Numeric PSI and categorical total-variation drift checks
-- Non-root Docker serving
-- Kubernetes probes, resource limits, HPA, and PodDisruptionBudget template
-- Automated tests and CI container builds
-- Production runbook and security guidance
+## Results and Limitations
 
-## Repository structure
+The repository includes a framework for comparing models and evaluating a held-out test set. **No numerical detection-performance claim is published**, because the source dataset is not included and the updated pipeline has not been rerun against it here. This is a feature-based ML reference, not a verified live phishing-blocking service.
 
-```text
-.
-├── app.py
-├── phishing_website_detection.ipynb
-├── Dockerfile
-├── requirements.txt
-├── src/
-│   ├── pipeline.py
-│   ├── train.py
-│   ├── evaluate.py
-│   ├── inference.py
-│   ├── monitor.py
-│   └── production.py
-├── tests/
-│   ├── test_pipeline.py
-│   ├── test_inference.py
-│   └── test_monitor.py
-├── deploy/
-│   └── kubernetes.yaml
-└── docs/
-    └── production_runbook.md
-```
+## Technology Stack
 
-## Input data
+**Python · pandas · scikit-learn · FastAPI · Docker · Kubernetes · pytest**
 
-The dataset is not committed. Supply the CSV used by the original notebook or another dataset with the same target convention.
+## Explore the Project
 
-The training pipeline expects a `label` column by default. Change it with `--target` if needed.
+- [Original exploratory notebook](phishing_website_detection.ipynb)
+- [Technical guide — methods, commands, and architecture](docs/technical_guide.md)
+- [Deployment and operations notes](docs/production_runbook.md)
+- [Security guidance](SECURITY.md)
 
-## Train and compare models
-
-```bash
-pip install -r requirements.txt
-
-python -m src.train \
-  --data path/to/phishing_dataset.csv \
-  --model-out artifacts/best_model.joblib \
-  --outputs-dir outputs
-```
-
-Training writes validation comparison outputs plus `outputs/deployment_manifest.json`, which records the selected model, threshold, model version, creation time, and SHA-256 fingerprint.
-
-## Locked evaluation
-
-```bash
-python -m src.evaluate \
-  --data path/to/phishing_dataset.csv \
-  --model-path artifacts/best_model.joblib \
-  --outputs-dir outputs
-```
-
-The test split is untouched until model and threshold selection are complete.
-
-## Drift monitoring
-
-The bundle stores a reference profile from the training split. Compare a later scoring batch with:
-
-```bash
-python -m src.monitor \
-  --data path/to/current_batch.csv \
-  --model-path artifacts/best_model.joblib \
-  --output outputs/drift_report.json
-```
-
-Numeric features use population stability index (PSI); categorical features use total-variation distance. Included alert thresholds are engineering defaults for demonstration and should be calibrated against actual production distributions.
-
-## Serve the model
-
-```bash
-uvicorn app:app --host 0.0.0.0 --port 8000
-```
-
-Endpoints:
-
-- `GET /live` — process liveness
-- `GET /ready` — model readiness
-- `GET /metrics` — Prometheus-format runtime metrics
-- `GET /metadata` — authenticated model/version/schema/fingerprint metadata
-- `POST /predict` — authenticated single-record inference
-- `POST /predict/batch` — authenticated bounded-batch inference
-
-For production, set `REQUIRE_API_KEY=true`, provide `API_KEY` through the hosting platform's secret manager, and set `MODEL_SHA256` to the fingerprint of the promoted artifact.
-
-## Container and deployment
-
-```bash
-docker build -t phishing-detection-api .
-```
-
-The container runs as a non-root user and expects the model artifact to be mounted read-only. The Kubernetes reference adds multiple replicas, readiness/liveness probes, CPU and memory controls, autoscaling, a PodDisruptionBudget, dropped Linux capabilities, and a read-only root filesystem.
-
-See `deploy/kubernetes.yaml`, `docs/production_runbook.md`, `.env.example`, and `SECURITY.md`.
-
-## Tests
-
-```bash
-pytest -q
-```
-
-GitHub Actions compiles the service, runs the tests, checks installed dependencies, and builds the production container.
+The training dataset must be supplied separately; see the technical guide for the expected schema and commands.
