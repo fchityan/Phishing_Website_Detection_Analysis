@@ -27,4 +27,4 @@ These checks are **proposed acceptance scenarios**, not evidence of stakeholder 
 
 A deployed workflow would require defined alert owners, analyst escalation, risk appetite, labelled-outcome feedback, case retention, audit requirements and security/privacy controls. No measured detection accuracy is claimed without re-running the unavailable source dataset.
 
-See [AI readiness](../ai-enablement/readiness-and-governance.md).
+See [AI readiness](../ai-enablement/ai-readiness-and-model-governance-assessment.md).
