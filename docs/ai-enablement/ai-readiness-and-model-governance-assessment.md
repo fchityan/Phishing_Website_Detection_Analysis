@@ -19,4 +19,4 @@ Candidate models are Logistic Regression, Random Forest and Extra Trees. The ref
 
 **Boundary:** This is a reference pipeline, not a verified live phishing-blocking service.
 
-See [requirements and solution design](../business-analysis/requirements-and-solution-design.md).
+See [requirements and solution design](../business-analysis/business-requirements-and-solution-design.md).
