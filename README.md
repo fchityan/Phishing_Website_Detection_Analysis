@@ -37,6 +37,10 @@ The repository includes a framework for comparing models and evaluating a held-o
 - **Monitoring and operations:** Prometheus Python client, feature-drift checks, Docker, Kubernetes
 - **Testing and automation:** pytest, GitHub Actions CI
 
+## Enterprise-Style Documentation (Reference, Not SOC Approval)
+
+[Business requirements, architecture, validation, adversarial risk, security and operational controls](docs/enterprise/README.md). The material distinguishes reference implementation from verified SOC acceptance and deployment.
+
 ## Explore the Project
 
 - [Phishing risk — business analysis, ML solution design and operational readiness](docs/README.md)
