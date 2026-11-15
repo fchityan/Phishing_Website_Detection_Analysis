@@ -39,7 +39,7 @@ The repository includes a framework for comparing models and evaluating a held-o
 
 ## Explore the Project
 
-- [Business analysis, solution design and AI-governance documentation](docs/README.md)
+- [Phishing risk — business analysis, ML solution design and operational readiness](docs/README.md)
 
 - [Original exploratory notebook](data-discovery-and-insights/phishing-risk-feature-profiling.ipynb)
 - [Technical guide — methods, commands, and architecture](docs/solution-design/solution-design-and-implementation-guide.md)
