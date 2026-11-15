@@ -1,4 +1,4 @@
-# Phishing Risk Classification — Enterprise Documentation Reference
+# Phishing Risk Classification
 
 **Classification:** Portfolio reference for a feature-based phishing classifier. **Not** a live browser-protection or SOC enforcement service; verified current detection-performance results are unavailable because the original source dataset is not committed.
 
