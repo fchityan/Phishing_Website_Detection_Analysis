@@ -8,7 +8,7 @@ This notebook contains exploratory analysis of website indicators and a binary p
 
 - Supply your own SQLite database containing a table named `phishing_data`. The dataset is not committed to this repository.
 - Start Jupyter in this folder, or set the environment variable `PHISHING_DB_PATH` to the absolute path of your SQLite database.
-- If not set, `PHISHING_DB_PATH` defaults to `phishing_data.sqlite` in the current working directory.
+- `PHISHING_DB_PATH` must be configured to an authorised local source.
 - The notebook uses SQLite, pandas, NumPy, Matplotlib and Seaborn. A completed historical output in the notebook does not establish results for a newly supplied dataset.
 
 **Labels:** `0` indicates phishing; `1` indicates a legitimate website.
